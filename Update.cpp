@@ -32,7 +32,6 @@ void update_GameStandard() {
   int x;				//current random spawning. could be changed later based on what we want.
   int y;
 
-  long num;
   if (timer % 420 == 0) // every 8 secs
   {
     int i = 0;
@@ -41,16 +40,16 @@ void update_GameStandard() {
       x = rand();
       y = rand();
 
-      if (x>y) {
-        addEnt(new Shark(Coords(rand() % SCREEN_WIDTH, 0)));
+      if (x > y) {
+        addEnt(new Shark(Coords(rand() % SCREEN_WIDTH, 0.0f)));
         addEnt(new Iceberg(Coords(rand() % SCREEN_WIDTH, SCREEN_HEIGHT), 1));
-        addEnt(new Shark(Coords(0, rand() % SCREEN_HEIGHT)));
+        addEnt(new Shark(Coords(0.0f, rand() % SCREEN_HEIGHT)));
         addEnt(new Iceberg(Coords(SCREEN_WIDTH, rand() % SCREEN_HEIGHT), 1));
       } else {
         addEnt(new Shark(Coords(SCREEN_WIDTH, rand() % SCREEN_HEIGHT)));
-        addEnt(new Iceberg(Coords(0, rand() % SCREEN_HEIGHT)));
+        addEnt(new Iceberg(Coords(0.0f, rand() % SCREEN_HEIGHT)));
         addEnt(new Shark(Coords(rand() % SCREEN_WIDTH, SCREEN_HEIGHT)));
-        addEnt(new Iceberg(Coords(rand() % SCREEN_WIDTH, 0)));
+        addEnt(new Iceberg(Coords(rand() % SCREEN_WIDTH, 0.0f)));
       }
     }
 
@@ -71,7 +70,6 @@ void update_GameTitanic() {
   int x;				//current random spawning. could be changed later based on what we want.
   int y;
 
-  long num;
   if (timer % 158 == 0) // every 3 secs
   {
 
@@ -82,7 +80,7 @@ void update_GameTitanic() {
     x = rand();
     y = rand();
     j++;
-    if (x>y) {
+    if (x > y) {
       addEnt(new Iceberg(Coords(rand() % SCREEN_WIDTH, SCREEN_HEIGHT)));
       addEnt(new Iceberg(Coords(SCREEN_WIDTH, rand() % SCREEN_HEIGHT)));
     } else {
@@ -99,7 +97,7 @@ void update_GameTitanic() {
   }
 
   int loss = 75 - j;
-  if (loss<40)
+  if (loss < 40)
     loss = 40;
   if (timer %  loss == 0) {
     player->health--;
@@ -110,7 +108,6 @@ void update_GameSurvival() {
   int x;				//current random spawning. could be changed later based on what we want.
   int y;
 
-  long num;
   if (timer % 420 == 0) // every 8 secs
   {
     int i = 0;
@@ -119,7 +116,7 @@ void update_GameSurvival() {
       x = rand();
       y = rand();
 
-      if (x>y) {
+      if (x > y) {
         addEnt(new Shark(Coords(rand() % SCREEN_WIDTH, 0)));
         addEnt(new Iceberg(Coords(rand() % SCREEN_WIDTH, SCREEN_HEIGHT), 1));
         addEnt(new Shark(Coords(0, rand() % SCREEN_HEIGHT)));
@@ -189,7 +186,7 @@ void Update() {
   funcPtr update_Game[] = { &update_GameMainMenu, &update_GameStandard, &update_GameTitanic, &update_GameSurvival };
   update_Game[gameState.gameMode]();
 
-  if (playerInvuln >0) {
+  if (playerInvuln > 0) {
     playerInvuln--;			//handles player being invulnrable
   } else
     player->invincible = false;

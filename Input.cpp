@@ -69,13 +69,3 @@ void OnControllerAxis(SDL_JoyAxisEvent e) {
     break;
   }
 }
-/*
-void XInput() {
-  float rx = GAMEPAD_RIGHT_X, ry = GAMEPAD_RIGHT_Y;
-
-  xinputTimer++;
-  if (!(xinputTimer % 5))
-    if (fabsf(rx) > 0.5 || fabsf(ry) > 0.5)
-      OnMouseClick(0, 0, 0, 0);
-}
-*/

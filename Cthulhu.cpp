@@ -12,8 +12,6 @@ Cthulhu::Cthulhu(Coords c) : Entity(c) {
 
 void Cthulhu::move() {
   Coords distance;
-  float diagDistance;
-
   distance = player->coords - coords;
 
   if (fabsf(distance.x) > fabsf(distance.y)) {

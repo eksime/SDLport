@@ -2,7 +2,7 @@
 #include "Player.h"
 
 Shark::Shark(Coords c) : Entity(c) {
-  setTexture("shark");
+  setTexture("sharkunder");
   entType = SHARK;
   health = 1;
   maxHealth = 1;
@@ -28,7 +28,9 @@ void Shark::move() {
     movement.x *= 2;
     movement.y *= 2;
     invincible = false;
+    setTexture("shark");
   } else {
+    setTexture("sharkunder");
     invincible = true;
   }
 

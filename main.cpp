@@ -110,7 +110,7 @@ bool loadMedia() {
   //Loading success flag
   bool success = true;
 
-  for (string t : { "player", "shark", "iceberg", "bullet", "cthulhu" }) {
+  for (string t : { "player", "shark", "sharkunder", "iceberg", "bullet", "cthulhu" }) {
     LTexture::texturePool[t] = *new LTexture;
     if (!LTexture::texturePool[t].loadFromFile("res/" + t + ".png")) {
       std::cout << "Failed to load " + t + " texture!\n" << std::endl;
