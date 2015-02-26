@@ -1,6 +1,10 @@
 #pragma once
 #include <SDL.h>
+#include "Coords.h"
 
-extern bool keys[1024];
+extern Coords bulletAngle;
 void OnMouseClick(SDL_MouseButtonEvent e);
+void OnControllerAxis(SDL_JoyAxisEvent e);
+void OnKeyDown(SDL_Keycode e);
+void OnKeyUp(SDL_Keycode e);
 void MouseMotion(SDL_MouseMotionEvent e);

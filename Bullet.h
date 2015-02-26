@@ -3,8 +3,9 @@
 
 class Bullet : public Entity {
   int damage;
+  Coords target;
 public:
-  Bullet(Coords c, Coords d);
+  Bullet(Coords c, Coords t);
   ~Bullet();
 
   void move();

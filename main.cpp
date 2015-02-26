@@ -129,11 +129,6 @@ bool loadMedia() {
 
 
 void init() {
-
-  //gameState.gameMode = GAME_STANDARD;
-  //gameState.gameMode = GAME_TITANIC;
-  //gameState.gameMode = GAME_SURVIVAL;
-
   gameState.score = 0;
   int initHP;
   switch (gameState.gameMode) {
@@ -151,7 +146,6 @@ void init() {
 }
 
 void close() {
-
   //Free all textures
   for (pair<string, LTexture> t : LTexture::texturePool) {
     t.second.free();
@@ -235,9 +229,15 @@ void handleEvents() {
 }
 
 int main(int argc, char* args[]) {
-  //if (argc == 1) exit(0);
-  //gameState.gameMode = (GAME_MODE)atoi(argv[1]);
-  //gameState.playerName = argv[2];
+
+#ifndef _DEBUG
+  if (argc == 1) exit(0);
+  gameState.gameMode = (GAME_MODE)atoi(args[1]);
+  gameState.playerName = args[2];
+#else
+  gameState.gameMode = GAME_STANDARD;
+  gameState.playerName = "DEBUG";
+#endif
 
   //Start up SDL and create window
   if (!initSDL()) {

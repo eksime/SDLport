@@ -4,13 +4,14 @@
 #include "GameState.h"
 
 
-Bullet::Bullet(Coords c, Coords d) : Entity(c) {
+Bullet::Bullet(Coords c, Coords t) : Entity(c) {
   setTexture("bullet");
   entType = BULLET;
   health = 1;
   damage = player->damage;
   maxHealth = 1;
   invincible = false;
+  target = t;
   collisionRadius = 16;
 }
 
@@ -21,7 +22,7 @@ void Bullet::move() {
     float diagDistance;
 
     if (0 == 0/*pollController() == 0*/) {
-      distance = mouse.coords - player->coords;
+      distance = target - coords;
     } else {
       //xDistance = GAMEPAD_RIGHT_X;
       //yDistance = GAMEPAD_RIGHT_Y;

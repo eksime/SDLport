@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Update.h"
 #include "Coords.h"
+#include "Tables.h"
 
 #include "Bullet.h"
 #include "Iceberg.h"
@@ -148,6 +149,9 @@ void update_GameSurvival() {
 
 void Update() {
   timer++;
+  if (!(timer % 5) && (bulletAngle.x != 0 || bulletAngle.y != 0)) {
+    addEnt(new Bullet(player->coords, player->coords + bulletAngle));
+  }
   std::list<Entity*>::iterator ent = Entity::entities.begin();
   while (ent != Entity::entities.end()) {
     if ((*ent)->health <= 0 && (*ent)->entType != PLAYER) {
@@ -171,11 +175,9 @@ void Update() {
     }
   }
 
-  //removes any entities which need removing
-  if (keys[27])
-    player->health = 0;
+  //removes any entitie
   if (player->health == 0) {
-    //updateScores();
+    updateScores();
     exit(0);
 
     //leaderboard here

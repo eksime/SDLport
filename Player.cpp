@@ -5,7 +5,6 @@
 Player::Player(Coords c, int h) : Entity(c) {
   setTexture("player");
   entType = PLAYER;
-  name = "Player";
   speedmod = 1;
   health = h;
   maxHealth = h;
@@ -47,14 +46,9 @@ void Player::collide(Entity* with) {
 };
 
 void Player::move() {
-  /*
-  float rx = GAMEPAD_LEFT_X, ry = GAMEPAD_LEFT_Y;
-  e->movement.x = (rx == 0 ? (keys['a'] ? -1 : (keys['d'] ? 1 : 0)) : rx) * playerMoveSpeedModifier;	//if a, left. if d, right. else 0
-  e->movement.y = (ry == 0 ? (keys['w'] ? -1 : (keys['s'] ? 1 : 0)) : ry) * playerMoveSpeedModifier;	//if w, up. if s, down. else 0;
-  */
-
-  movement.x = keys['a'] ? -1 : (keys['d'] ? 1 : 0) * speedmod;	//if a, left. if d, right. else 0
-  movement.y = keys['w'] ? -1 : (keys['s'] ? 1 : 0) * speedmod;	//if w, up. if s, down. else 0;
-  coords = coords + movement;
+  Coords adjusted = movement;
+  adjusted.x *= speedmod;
+  adjusted.y *= speedmod;
+  coords = coords + adjusted;
 }
 Player::~Player() {};

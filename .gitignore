@@ -154,3 +154,8 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# Highscores
+[Cc]lassic.txt
+[Ss]urvival.txt
+[Tt]itanic.txt

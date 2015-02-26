@@ -9,7 +9,6 @@ public:
   void move();
   void collide(Entity* e);
 
-  std::string name;
   int playerInvuln;
   int damage;
   float speedmod;
