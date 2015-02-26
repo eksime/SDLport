@@ -1,12 +1,13 @@
 #include "Input.h"
 #include "Entity.h"
 #include "Mouse.h"
+#include "GameState.h"
 
 int bulletDmg = 1;
 
 void OnMouseClick(SDL_MouseButtonEvent e) {
- // if (gameState.gameMode != GAME_TITANIC)
-    Bullet(Coords(mouse.coords),Coords(), 1 * bulletDmg);
+  if (gameState.gameMode != GAME_TITANIC)
+    addEnt(new Bullet(player->coords, mouse.coords));
 }
 
 // This is called when the mouse is moved.

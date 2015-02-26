@@ -13,12 +13,12 @@ and may not be redistributed without written permission.*/
 
 using namespace std;
 
-#include "main.h"
 #include "Coords.h"
 #include "GameState.h"
 #include "LTexture.h"
 #include "Entity.h"
 #include "Input.h"
+#include "Update.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 1024;
@@ -27,6 +27,7 @@ const int MS_PER_UPDATE = 16;
 bool quit = false;
 
 bool keys[1024];
+Player* player;
 //Starts up SDL and creates window
 
 //Loads media
@@ -52,7 +53,7 @@ bool initSDL() {
       printf("Warning: Linear texture filtering not enabled!");
     }
     //Create window
-    gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    gWindow = SDL_CreateWindow("Sharks n' Icebergs", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (gWindow == NULL) {
       printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
       success = false;
@@ -109,18 +110,17 @@ bool loadMedia() {
   return success;
 }
 
+
 void init() {
-  Shark(Coords(50, 50));
-  Iceberg(Coords(50, 120));
-  Bullet(Coords(50, 180), Coords(), 1);
-  Cthulhu(Coords(50, 240));
-  Player(Coords(50, 280), 10);
+ // Iceberg(Coords(50, 120));
+ // Bullet(Coords(50, 180), Coords(), 1);
+ // Cthulhu(Coords(50, 240));
 
 
   gameState.gameMode = GAME_STANDARD;
   //gameState.gameMode=GAME_TITANIC;
   gameState.score = 0;
-  Player(Coords(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 10);
+  addEnt(new Player(Coords(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 10));
 }
 
 void close() {
@@ -148,12 +148,10 @@ void render() {
   SDL_RenderClear(gRenderer);
 
   //Render arrow
-  std::list<Entity>::iterator ent = Entity::entities.begin();
+  std::list<Entity*>::iterator ent = Entity::entities.begin();
   while (ent != Entity::entities.end()) {
-    ent->movement.x = 1;
-    ent->movement.y = 1;
-    ent->coords = ent->coords + ent->movement;
-    ent->render();
+    (*ent)->render();
+    (*ent)->move();
     ent++;
   }
  // LTexture::texturePool["arrow"].render((SCREEN_WIDTH - LTexture::texturePool["arrow"].getWidth()) / 2, (SCREEN_HEIGHT - LTexture::texturePool["arrow"].getHeight()) / 2, NULL, 0);
@@ -161,10 +159,6 @@ void render() {
   gTextArial.loadFromRenderedText("Score", { 0, 0, 0 })->render(0, 50);
   //Update screen
   SDL_RenderPresent(gRenderer);
-}
-
-void update() {
-
 }
 
 void handleEvents() {
@@ -177,17 +171,21 @@ void handleEvents() {
       break;
 
     case SDL_KEYDOWN:
-      keys[e.key.keysym.scancode] = true;
+      keys[e.key.keysym.sym] = true;
       break;
 
     case SDL_KEYUP:
-      keys[e.key.keysym.scancode] = false;
+      keys[e.key.keysym.sym] = false;
+      break;
+
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+      OnMouseClick(e.button);
       break;
 
     case SDL_MOUSEMOTION:
-
+      MouseMotion(e.motion);
       break;
-
 
     }
   }
@@ -217,7 +215,7 @@ int main(int argc, char* args[]) {
         handleEvents();
 
         while (lag >= MS_PER_UPDATE) {
-          update();
+          Update();
           lag -= MS_PER_UPDATE;
         }
 
