@@ -100,8 +100,10 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Shark.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Tables.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Update.h" />
+    <ClInclude Include="xbox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
@@ -117,7 +119,9 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Shark.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Tables.cpp" />
     <ClCompile Include="Update.cpp" />
+    <ClCompile Include="xbox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SDLport.rc" />

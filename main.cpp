@@ -43,6 +43,7 @@ Player* player;
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
+SDL_Joystick* gGameController = NULL;
 
 //Scene textures
 LTexture gTextArial;
@@ -50,24 +51,34 @@ LTexture gTextArial;
 bool initSDL() {
   bool success = true;
   //Initialize SDL
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
+    printf("Critical: SDL could not initialize! SDL Error: %s\n", SDL_GetError());
     success = false;
   } else {
     //Set texture filtering to linear
     if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
       printf("Warning: Linear texture filtering not enabled!");
     }
+    //Check for joysticks
+    if (SDL_NumJoysticks() < 1) {
+      printf("Warning: No joysticks connected!\n");
+    } else {
+      //Load joystick
+      gGameController = SDL_JoystickOpen(0);
+      if (gGameController == NULL) {
+        printf("Critical: Unable to open game controller! SDL Error: %s\n", SDL_GetError());
+      }
+    }
     //Create window
     gWindow = SDL_CreateWindow("Sharks n' Icebergs", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (gWindow == NULL) {
-      printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
+      printf("Critical: Window could not be created! SDL Error: %s\n", SDL_GetError());
       success = false;
     } else {
       //Create vsynced renderer for window
       gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
       if (gRenderer == NULL) {
-        printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+        printf("Critical: Renderer could not be created! SDL Error: %s\n", SDL_GetError());
         success = false;
       } else {
         //Initialize renderer color
@@ -77,13 +88,13 @@ bool initSDL() {
         //Initialize PNG loading
         int imgFlags = IMG_INIT_PNG;
         if (!(IMG_Init(imgFlags) & imgFlags)) {
-          printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+          printf("Critical: SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
           success = false;
         }
 
         //Initialize SDL_ttf
         if (TTF_Init() == -1) {
-          printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+          printf("Critical: SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
           success = false;
         }
         //set texture render target
@@ -118,15 +129,25 @@ bool loadMedia() {
 
 
 void init() {
- // Iceberg(Coords(50, 120));
- // Bullet(Coords(50, 180), Coords(), 1);
- // Cthulhu(Coords(50, 240));
 
+  //gameState.gameMode = GAME_STANDARD;
+  //gameState.gameMode = GAME_TITANIC;
+  //gameState.gameMode = GAME_SURVIVAL;
 
-  gameState.gameMode = GAME_STANDARD;
-  //gameState.gameMode=GAME_TITANIC;
   gameState.score = 0;
-  addEnt(new Player(Coords(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 10));
+  int initHP;
+  switch (gameState.gameMode) {
+  case GAME_STANDARD:
+    initHP = 3;
+    break;
+  case GAME_SURVIVAL:
+    initHP = 1;
+    break;
+  case GAME_TITANIC:
+    initHP = 10;
+    break;
+  }
+  addEnt(new Player(Coords(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), initHP));
 }
 
 void close() {
@@ -135,6 +156,9 @@ void close() {
   for (pair<string, LTexture> t : LTexture::texturePool) {
     t.second.free();
   }
+
+  SDL_JoystickClose(gGameController);
+  gGameController = NULL;
 
   //Destroy window	
   SDL_DestroyRenderer(gRenderer);
@@ -180,11 +204,13 @@ void handleEvents() {
       break;
 
     case SDL_KEYDOWN:
-      keys[e.key.keysym.sym] = true;
+      if (!e.key.repeat)
+        OnKeyDown(e.key.keysym.sym);
       break;
 
     case SDL_KEYUP:
-      keys[e.key.keysym.sym] = false;
+      if (!e.key.repeat)
+        OnKeyUp(e.key.keysym.sym);
       break;
 
     case SDL_MOUSEBUTTONDOWN:
@@ -194,6 +220,14 @@ void handleEvents() {
 
     case SDL_MOUSEMOTION:
       MouseMotion(e.motion);
+      break;
+
+    case SDL_JOYAXISMOTION:
+      OnControllerAxis(e.jaxis);
+      break;
+
+    case SDL_CONTROLLERBUTTONDOWN:
+    case SDL_CONTROLLERBUTTONUP:
       break;
 
     }
