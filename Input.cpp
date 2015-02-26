@@ -1,5 +1,6 @@
 #include "Input.h"
-#include "Entity.h"
+#include "Bullet.h"
+#include "Player.h"
 #include "Mouse.h"
 #include "GameState.h"
 

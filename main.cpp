@@ -16,9 +16,15 @@ using namespace std;
 #include "Coords.h"
 #include "GameState.h"
 #include "LTexture.h"
-#include "Entity.h"
 #include "Input.h"
 #include "Update.h"
+
+#include "Bullet.h"
+#include "Iceberg.h"
+#include "Shark.h"
+#include "Bullet.h"
+#include "Player.h"
+#include "Cthulhu.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 1024;

@@ -3,8 +3,13 @@
 #include "Input.h"
 #include "Update.h"
 #include "Coords.h"
-#include "Entity.h"
 
+#include "Bullet.h"
+#include "Iceberg.h"
+#include "Shark.h"
+#include "Bullet.h"
+#include "Player.h"
+#include "Cthulhu.h"
 
 int playerInvuln = 0;
 long timer = 0;
