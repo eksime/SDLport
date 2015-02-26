@@ -84,6 +84,7 @@ bool initSDL() {
         //Initialize renderer color
         SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
+        SDL_SetRelativeMouseMode(SDL_TRUE);
 
         //Initialize PNG loading
         int imgFlags = IMG_INIT_PNG;
