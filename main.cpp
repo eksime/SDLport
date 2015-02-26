@@ -143,20 +143,23 @@ void close() {
 }
 
 void render() {
-  //Clear screen
-  SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  //SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_SetRenderDrawColor(gRenderer, 0, 153, 255, 0xFF);
   SDL_RenderClear(gRenderer);
 
-  //Render arrow
   std::list<Entity*>::iterator ent = Entity::entities.begin();
   while (ent != Entity::entities.end()) {
     (*ent)->render();
-    (*ent)->move();
     ent++;
   }
- // LTexture::texturePool["arrow"].render((SCREEN_WIDTH - LTexture::texturePool["arrow"].getWidth()) / 2, (SCREEN_HEIGHT - LTexture::texturePool["arrow"].getHeight()) / 2, NULL, 0);
 
-  gTextArial.loadFromRenderedText("Score", { 0, 0, 0 })->render(0, 50);
+  gTextArial.loadFromRenderedText("Score: " + to_string(gameState.score), { 255, 255, 255 })->render(SCREEN_WIDTH - 100, 30);
+  gTextArial.loadFromRenderedText("Health: " + to_string(player->health), { 255, 255, 255 })->render(SCREEN_WIDTH - 220, 30);
+
+  if (player->invincible == true) {
+    gTextArial.loadFromRenderedText("Invincible! " + to_string(player->health), { 255, 255, 255 })->render(SCREEN_WIDTH - 320, 30);
+  }
+
   //Update screen
   SDL_RenderPresent(gRenderer);
 }
@@ -192,6 +195,10 @@ void handleEvents() {
 }
 
 int main(int argc, char* args[]) {
+  //if (argc == 1) exit(0);
+  //gameState.gameMode = (GAME_MODE)atoi(argv[1]);
+  //gameState.playerName = argv[2];
+
   //Start up SDL and create window
   if (!initSDL()) {
     printf("Failed to initialize!\n");
