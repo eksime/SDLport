@@ -3,7 +3,6 @@
 #include "Player.h"
 #include "GameState.h"
 
-
 Bullet::Bullet(Coords c, Coords t) : Entity(c) {
   setTexture("bullet");
   entType = BULLET;
@@ -68,6 +67,6 @@ void Bullet::collide(Entity* with) {
         break;
     }
     }
-};
+}
 
 Bullet::~Bullet() {};

@@ -51,4 +51,5 @@ void Player::move() {
   adjusted.y *= speedmod;
   coords = coords + adjusted;
 }
+
 Player::~Player() {};

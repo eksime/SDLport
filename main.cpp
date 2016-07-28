@@ -1,6 +1,4 @@
-/*This source code copyrighted by Lazy Foo' Productions (2004-2015)
-and may not be redistributed without written permission.*/
-
+using namespace std;
 //Using SDL, SDL_image, standard IO, math, and strings
 #include <SDL.h>
 #include <SDL_image.h>
@@ -10,8 +8,6 @@ and may not be redistributed without written permission.*/
 #include <string>
 #include <cmath>
 #include <map>
-
-using namespace std;
 
 #include "Coords.h"
 #include "GameState.h"
@@ -34,11 +30,6 @@ bool quit = false;
 
 bool keys[1024];
 Player* player;
-//Starts up SDL and creates window
-
-//Loads media
-
-//Frees media and shuts down SDL
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
@@ -129,22 +120,6 @@ bool loadMedia() {
 }
 
 
-void init() {
-  gameState.score = 0;
-  int initHP;
-  switch (gameState.gameMode) {
-  case GAME_STANDARD:
-    initHP = 3;
-    break;
-  case GAME_SURVIVAL:
-    initHP = 1;
-    break;
-  case GAME_TITANIC:
-    initHP = 10;
-    break;
-  }
-  addEnt(new Player(Coords(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), initHP));
-}
 
 void close() {
   //Free all textures
@@ -167,6 +142,10 @@ void close() {
   SDL_Quit();
 }
 
+void drawText(string txt, SDL_Color c, int x, int y) {
+  gTextArial.loadFromRenderedText(txt, c)->render(x, y);
+}
+
 void render() {
   //SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
   SDL_SetRenderDrawColor(gRenderer, 0, 153, 255, 0xFF);
@@ -177,12 +156,23 @@ void render() {
     (*ent)->render();
     ent++;
   }
+  
+  if (gameState.gameMode != GAME_MAIN_MENU) {
+    drawText("Score: " + to_string(gameState.score), { 255, 255, 255 }, SCREEN_WIDTH - 100, 30);
+    drawText("Health: " + to_string(player->health), { 255, 255, 255 }, SCREEN_WIDTH - 220, 30);
 
-  gTextArial.loadFromRenderedText("Score: " + to_string(gameState.score), { 255, 255, 255 })->render(SCREEN_WIDTH - 100, 30);
-  gTextArial.loadFromRenderedText("Health: " + to_string(player->health), { 255, 255, 255 })->render(SCREEN_WIDTH - 220, 30);
+    if (player->invincible == true) {
+      drawText("Invincible! " + to_string(player->health), { 255, 255, 255 }, SCREEN_WIDTH - 320, 30);
+    }
+  } else {
+    int x = SCREEN_WIDTH / 2 - 60;
+    drawText("Main Menu", { 255, 255, 255 }, x, 30);
+    drawText("Standard", { 255, 255, 255 }, x, 200);
+    drawText("Demolition", { 255, 255, 255 }, x, 230);
+    drawText("Survival", { 255, 255, 255 }, x, 260);
+    drawText("Quit", { 255, 255, 255 }, x, 290);
 
-  if (player->invincible == true) {
-    gTextArial.loadFromRenderedText("Invincible! " + to_string(player->health), { 255, 255, 255 })->render(SCREEN_WIDTH - 320, 30);
+    drawText(">", { 255, 255, 255 }, x - 20, 200 + menuOption * 30);
   }
 
   //Update screen
@@ -210,15 +200,18 @@ void handleEvents() {
 
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
-      OnMouseClick(e.button);
+      if (gameState.gameMode != GAME_MAIN_MENU)
+        OnMouseClick(e.button);
       break;
 
     case SDL_MOUSEMOTION:
-      MouseMotion(e.motion);
+      if (gameState.gameMode != GAME_MAIN_MENU)
+        MouseMotion(e.motion);
       break;
 
     case SDL_JOYAXISMOTION:
-      OnControllerAxis(e.jaxis);
+      if (gameState.gameMode != GAME_MAIN_MENU)
+        OnControllerAxis(e.jaxis);
       break;
 
     case SDL_CONTROLLERBUTTONDOWN:
@@ -231,14 +224,8 @@ void handleEvents() {
 
 int main(int argc, char* args[]) {
 
-#ifndef _DEBUG
-  if (argc == 1) exit(0);
-  gameState.gameMode = (GAME_MODE)atoi(args[1]);
-  gameState.playerName = args[2];
-#else
-  gameState.gameMode = GAME_STANDARD;
+  gameState.gameMode = GAME_MAIN_MENU;
   gameState.playerName = "DEBUG";
-#endif
 
   //Start up SDL and create window
   if (!initSDL()) {
@@ -249,7 +236,6 @@ int main(int argc, char* args[]) {
       printf("Failed to load media!\n");
     } else {
 
-      init();
 
       double previous = clock();
       double lag = 0.0;

@@ -27,4 +27,5 @@ void Cthulhu::move() {
 
   coords = coords + movement;
 }
+
 Cthulhu::~Cthulhu() {};

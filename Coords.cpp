@@ -1,7 +1,6 @@
 #include "Coords.h"
 #include <math.h>
 
-
 Coords::Coords() {
   x = 0;
   y = 0;

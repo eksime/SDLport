@@ -26,6 +26,7 @@ Entity::Entity(Coords c) {
 bool Entity::collisionCheck(Entity* e) {
   return (coords - e->coords).pyth() <= (collisionRadius + e->collisionRadius);
 }
+
 Entity::~Entity() {}
 
 
